@@ -1,0 +1,15 @@
+version: '3'
+volumes:
+  redis-data:
+    driver: local
+services:
+  redis:
+    image: redis:6.2-alpine
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6380:6379"
+  captcha-resolver:
+    image: registry.gitlab.com/nhayhoc/bank-captcha-server
+    ports:
+      - "1234:1234"
