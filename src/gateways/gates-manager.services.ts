@@ -31,6 +31,22 @@ export class GatesManagerService implements OnApplicationBootstrap {
     const banksConfigValidated = this.validateBanksConfig(banksConfigInput);
 
     this.createGates(banksConfigValidated);
+
+    // Thiết lập tác vụ chạy mỗi phút
+    this.setupCronJob();
+  }
+
+  setupCronJob() {
+    setInterval(() => {
+      const now = new Date();
+      // Chuyển đổi giờ hiện tại sang giờ Việt Nam (UTC+7)
+
+      // Kiểm tra nếu thời gian hiện tại là 20:00 theo giờ Việt Nam
+      if (now.getHours() === 20 && now.getMinutes() === 0) {
+        this.startCron('mb_bank_1', 60);
+      }
+      console.log('Cron job running');
+    }, 60 * 1000); // Kiểm tra mỗi phút
   }
 
   createGates(banksConfig: GateConfig[]) {
@@ -118,6 +134,7 @@ export class GatesManagerService implements OnApplicationBootstrap {
     //   this.startAllCron();
     // }, 5 * 60000);
   }
+
   startAllCron() {
     this.gates.forEach((gate) => gate.startCron());
     // setTimeout(() => {
